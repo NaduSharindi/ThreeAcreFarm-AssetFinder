@@ -1,0 +1,65 @@
+@model ImportViewModel
+@{
+    ViewData["Title"] = "Import register";
+    ViewData["Tagline"] = "Refresh the asset list from the Fixed Assets workbook or the AS/400 extract.";
+}
+<section class="panel" aria-label="Import register">
+    <p class="panel-title">Update asset list</p>
+    <p class="hint">
+        Upload the latest <strong>Fixed Assets Excel workbook (.xlsx)</strong> (one sheet per farm with an
+        "Asset Code" header) or the <strong>AS/400 FAMAST extract (.txt)</strong>. Farms in the file are
+        synchronised; assets no longer listed for those farms are deactivated (history is kept). Farms not in
+        the file are not touched. The whole import is one transaction: it either fully applies or not at all.
+    </p>
+
+    @if (Model.Error is not null)
+    {
+        <div class="alert alert-error" role="alert">@Model.Error</div>
+    }
+    @if (Model.Result is { } r)
+    {
+        <div class="alert alert-ok" role="status">
+            Batch @r.BatchId imported: @r.RowsRead rows read, @r.InsertedCount new, @r.UpdatedCount updated, @r.DeactivatedCount deactivated.
+        </div>
+    }
+
+    <form method="post" enctype="multipart/form-data" asp-action="Import" class="upload-row">
+        <div class="field grow">
+            <label for="register">Register file</label>
+            <input id="register" name="register" type="file" accept=".xlsx,.xlsm,.txt" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Import</button>
+    </form>
+</section>
+
+<section class="panel" aria-label="Recent imports">
+    <p class="panel-title">Recent imports</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Batch</th><th>File</th><th>Source</th><th>Status</th><th>Read</th><th>New</th><th>Updated</th><th>Deactivated</th><th>By</th><th>Started (UTC)</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var b in Model.RecentBatches)
+                {
+                    <tr>
+                        <td>@b.BatchId</td>
+                        <td>@b.FileName</td>
+                        <td>@b.SourceType</td>
+                        <td><span class="badge badge-@b.Status.ToLowerInvariant()" title="@b.ErrorMessage">@b.Status</span></td>
+                        <td>@b.RowsRead</td>
+                        <td>@b.InsertedCount</td>
+                        <td>@b.UpdatedCount</td>
+                        <td>@b.DeactivatedCount</td>
+                        <td>@b.ImportedBy</td>
+                        <td class="nowrap">@b.StartedUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                    </tr>
+                }
+                @if (Model.RecentBatches.Count == 0)
+                {
+                    <tr><td colspan="10" class="hint">No imports yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

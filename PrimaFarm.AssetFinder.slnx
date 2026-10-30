@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PrimaFarm.AssetFinder.Web/PrimaFarm.AssetFinder.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PrimaFarm.AssetFinder.Tests/PrimaFarm.AssetFinder.Tests.csproj" />
+  </Folder>
+</Solution>

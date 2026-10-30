@@ -1,0 +1,13 @@
+<!--
+  SOAP 1.1 request for the legacy consumer endpoint.
+  curl -H "X-Api-Key: dev-erp-gateway-key-ChangeMe" -H "Content-Type: text/xml; charset=utf-8"
+       -H "SOAPAction: \"http://primafarms.lk/assetfinder/2026/IAssetLookupSoapService/GetAsset\""
+       -d @samples/soap_get_asset.xml http://localhost:5016/soap/AssetLookup.asmx
+-->
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <GetAsset xmlns="http://primafarms.lk/assetfinder/2026">
+      <assetCode>60110630</assetCode>
+    </GetAsset>
+  </s:Body>
+</s:Envelope>

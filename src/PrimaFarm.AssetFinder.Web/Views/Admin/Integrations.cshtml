@@ -1,0 +1,48 @@
+@model List<IntegrationLog>
+@{
+    ViewData["Title"] = "Integration log";
+    ViewData["Tagline"] = "Calls to the finance Fixed Asset Register: status, latency and errors.";
+    var failed = (int)ViewBag.FailedCount;
+}
+<section class="panel" aria-label="Integration log">
+    @if (TempData["Message"] is string msg)
+    {
+        <div class="alert alert-ok" role="status">@msg</div>
+    }
+    <div class="toolbar">
+        <p class="hint">@failed verification(s) are waiting to be resent to the finance register.</p>
+        @if (failed > 0 && User.IsInRole(Roles.Admin))
+        {
+            <form method="post" asp-action="RetryFailed">
+                <button type="submit" class="btn btn-primary">Resend failed</button>
+            </form>
+        }
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Time (UTC)</th><th>Operation</th><th>Idempotency key</th><th>HTTP</th><th>Result</th><th>ms</th><th>Error</th><th>Correlation id</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var l in Model)
+                {
+                    <tr>
+                        <td class="nowrap">@l.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@l.Operation</td>
+                        <td><code class="small">@l.IdempotencyKey</code></td>
+                        <td>@l.HttpStatus</td>
+                        <td><span class="badge @(l.Succeeded ? "badge-completed" : "badge-failed")">@(l.Succeeded ? "OK" : "Failed")</span></td>
+                        <td>@l.DurationMs</td>
+                        <td>@l.ErrorMessage</td>
+                        <td><code class="small">@l.CorrelationId</code></td>
+                    </tr>
+                }
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="8" class="hint">No integration calls yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

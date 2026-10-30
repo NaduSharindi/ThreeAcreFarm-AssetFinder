@@ -1,0 +1,49 @@
+@model LookupViewModel
+@{
+    ViewData["Title"] = "Asset lookup";
+}
+@Html.AntiForgeryToken()
+
+<section class="farm-strip" aria-label="Assets per farm">
+    @foreach (var f in Model.Farms)
+    {
+        <div class="farm-chip">
+            <span class="farm-name">@f.Farm</span>
+            <span class="farm-stats">@f.AssetCount assets · @f.WithPhotoCount photos · @f.VerifiedLast12MonthsCount verified</span>
+        </div>
+    }
+    @if (Model.Farms.Count == 0)
+    {
+        <p class="hint">No assets loaded yet. An administrator can load the register from <strong>Import register</strong>.</p>
+    }
+</section>
+
+<section class="panel search-panel" aria-label="Asset search" id="lookup" data-can-edit="@(Model.CanEdit ? "true" : "false")">
+    <p class="panel-title">Look up an asset</p>
+    <p class="hint">Enter the asset code from the Fixed Assets schedule, or start typing a name. Matches appear as you type.</p>
+    <div class="search-row">
+        <div class="field grow">
+            <label for="codeInput">Asset code or name</label>
+            <input id="codeInput" type="text" placeholder="e.g. 60110630" autocomplete="off"
+                   aria-autocomplete="list" aria-controls="suggestions" maxlength="100" />
+        </div>
+        <div class="field">
+            <label for="farmFilter">Farm</label>
+            <select id="farmFilter">
+                <option value="">All farms</option>
+                @foreach (var f in Model.Farms)
+                {
+                    <option value="@f.Farm">@f.Farm</option>
+                }
+            </select>
+        </div>
+        <button id="searchBtn" type="button" class="btn btn-primary">Find</button>
+    </div>
+    <div id="suggestions" role="listbox" aria-label="Matching assets"></div>
+</section>
+
+<div id="result" aria-live="polite"></div>
+
+@section Scripts {
+    <script src="~/js/assets.js" asp-append-version="true"></script>
+}

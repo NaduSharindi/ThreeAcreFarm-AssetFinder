@@ -1,0 +1,56 @@
+@model AuditViewModel
+@{
+    ViewData["Title"] = "Audit trail";
+    ViewData["Tagline"] = "Append-only record of sign-ins, imports, photos and verifications.";
+}
+<section class="panel" aria-label="Audit trail">
+    <form method="get" class="upload-row">
+        <div class="field">
+            <label for="user">User</label>
+            <input id="user" name="user" value="@Model.Username" maxlength="100" />
+        </div>
+        <div class="field">
+            <label for="evt">Action</label>
+            <input id="evt" name="evt" value="@Model.Action" maxlength="40" placeholder="e.g. LOGIN_FAILED" />
+        </div>
+        <button type="submit" class="btn btn-secondary">Filter</button>
+    </form>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Time (UTC)</th><th>User</th><th>Action</th><th>Entity</th><th>Details</th><th>IP</th><th>Correlation id</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Entries)
+                {
+                    <tr>
+                        <td class="nowrap">@e.EventUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@e.Username</td>
+                        <td><code>@e.Action</code></td>
+                        <td>@e.EntityType @e.EntityId</td>
+                        <td>@e.Details</td>
+                        <td>@e.IpAddress</td>
+                        <td><code class="small">@e.CorrelationId</code></td>
+                    </tr>
+                }
+                @if (Model.Entries.Count == 0)
+                {
+                    <tr><td colspan="7" class="hint">No audit records match.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <p class="pager">
+        Page @Model.Page of @Model.TotalPages (@Model.TotalRows records)
+        @if (Model.Page > 1)
+        {
+            <a asp-action="Audit" asp-route-user="@Model.Username" asp-route-evt="@Model.Action" asp-route-page="@(Model.Page - 1)">Previous</a>
+        }
+        @if (Model.Page < Model.TotalPages)
+        {
+            <a asp-action="Audit" asp-route-user="@Model.Username" asp-route-evt="@Model.Action" asp-route-page="@(Model.Page + 1)">Next</a>
+        }
+    </p>
+</section>

@@ -1,0 +1,67 @@
+@{
+    const string AppName = "Three Acre Farm Fixed Assets";
+    var signedIn = User.Identity?.IsAuthenticated == true;
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    string Active(string c, string a) =>
+        string.Equals(controller, c, StringComparison.OrdinalIgnoreCase) && string.Equals(action, a, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Prima Three Acre Farms - look up fixed asset details and photos by asset code." />
+    <meta name="author" content="Nadunika Sharindi" />
+    <title>@(ViewData["Title"] is string t ? $"{t} · " : "")@AppName</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <span class="eyebrow">Prima Group · Three Acre Farms · Internal tool</span>
+                <h1>@AppName</h1>
+                <p class="tagline">@(ViewData["Tagline"] ?? "Find any fixed asset by its code: details, photo and last physical verification.")</p>
+            </div>
+            @if (signedIn)
+            {
+                <div class="user-chip">
+                    <span>@User.FindFirstValue(ClaimTypes.GivenName)</span>
+                    <span class="role">@User.FindFirstValue(ClaimTypes.Role)</span>
+                    <form method="post" asp-controller="Account" asp-action="Logout">
+                        <button type="submit">Sign out</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </header>
+
+    @if (signedIn)
+    {
+        <nav class="main-nav" aria-label="Main">
+            <a class="@Active("Assets", "Index")" asp-controller="Assets" asp-action="Index">Asset lookup</a>
+            @if (User.IsInRole(Roles.Admin))
+            {
+                <a class="@Active("Assets", "Import")" asp-controller="Assets" asp-action="Import">Import register</a>
+            }
+            @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Auditor))
+            {
+                <a class="@Active("Admin", "Audit")" asp-controller="Admin" asp-action="Audit">Audit trail</a>
+                <a class="@Active("Admin", "Integrations")" asp-controller="Admin" asp-action="Integrations">Integration log</a>
+            }
+        </nav>
+    }
+
+    <main class="site-main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <p>Developed by <span class="dev-name">Nadunika Sharindi</span> · <span class="year">2026</span></p>
+        <p>@AppName · ASP.NET Core · SQL Server</p>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

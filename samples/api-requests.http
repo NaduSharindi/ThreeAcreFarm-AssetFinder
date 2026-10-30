@@ -1,0 +1,28 @@
+### REST API samples (VS Code REST Client / Visual Studio .http files)
+### The dev API key below is only configured in appsettings.Development.json (as a SHA-256 hash).
+@base = http://localhost:5016
+@key = dev-erp-gateway-key-ChangeMe
+
+### One asset (JSON)
+GET {{base}}/api/v1/assets/60110630
+X-Api-Key: {{key}}
+Accept: application/json
+
+### One asset (XML)
+GET {{base}}/api/v1/assets/60110630
+X-Api-Key: {{key}}
+Accept: application/xml
+
+### Autocomplete search, optionally filtered by farm
+GET {{base}}/api/v1/assets/search?q=egg&farm=Meegoda
+X-Api-Key: {{key}}
+
+### Per-farm summary
+GET {{base}}/api/v1/farms/summary
+X-Api-Key: {{key}}
+
+### Health (anonymous, used by IIS deploy script and monitoring)
+GET {{base}}/health/ready
+
+### OpenAPI document (Development only)
+GET {{base}}/openapi/v1.json

@@ -1,0 +1,7 @@
+HFAMAST    20261030
+D000060110630Kosgama        PRODNAutomatic Feeder Line                   Pan feeder line with motor and hopper, House 1              00000000100Serviced Jan 2026                                 
+D000060110632Kosgama        PRODNFeed Silo 12 t                          Galvanised bulk feed silo with auger                        00000000100Installed Aug 2026                                
+D000060110710Kosgama        GENRLGenerator 60 kVA                        Diesel standby generator with ATS panel                     00000000100Main power backup                                 
+D000060120105Eswatta        PRODNEgg Collection Belt                     Motorised egg belt conveyor, House 3                        00000000100                                                  
+D000060120230Eswatta        GENRLWater Pump 3 HP                         Submersible borehole pump with control box                  00000000250Includes one spare motor                          
+T000000005
