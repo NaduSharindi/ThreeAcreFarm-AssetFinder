@@ -93,7 +93,7 @@ jobs:
     name: Deploy to UAT
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: [build-test, database-validate]
-    runs-on: [self-hosted, windows, uat]
+    runs-on: [self-hosted, Windows, uat]
     environment: uat            # GitHub environment with required reviewers = UAT approval gate
     steps:
       - uses: actions/checkout@v4
