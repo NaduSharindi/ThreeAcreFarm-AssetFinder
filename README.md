@@ -106,4 +106,4 @@ API keys are stored only as SHA-256 hashes under `ApiClients:Clients`.
 | Audit and business continuity | append-only `AuditLog` (trigger-enforced), import batches with file SHA-256, soft-delete, `900_backup_and_maintenance.sql` |
 
 ---
-Developed by Nadunika Sharindi · 2026 · All sample data is synthetic.
+Developed by Nadunika Sharindi · 2026 · 
